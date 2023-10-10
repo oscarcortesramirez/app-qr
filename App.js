@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { useState } from 'react';
-import SvgQRCode from 'react-native-qrcode-svg';
+import { useContext, useState } from 'react';
+import PanelQRCode from './components/PanelQRCode';
+import QRCode from './components/QRCode';
 
 export default function App() {
 
+  const contextTheme = useContext();
   const [ text, setText ] = useState("hola")
   
   return (
     <View style={styles.container}>
       <Text style={styles.title} >App para generar codigo QR</Text>
-      <TextInput value={text} style={styles.caja} onChangeText={setText} />
-      <SvgQRCode value={text} />
+      <PanelQRCode text={text} onChangeText={setText} />
+      <QRCode text={text} />
     </View>
   );
 }

@@ -5,7 +5,7 @@ import QRCode from './components/QRCode';
 
 export default function App() {
 
-  const contextTheme = useContext();
+  const theme = useContext();
   const [ text, setText ] = useState("hola")
   
   return (

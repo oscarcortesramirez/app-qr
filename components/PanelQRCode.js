@@ -1,7 +1,15 @@
 import { TextInput } from "react-native";
+import { useContextPanelQRCode } from "../providers/QRCodeProvider";
 
-export default function PanelQRCode ({text, onChangeText}) {
+export default function PanelQRCode () {
+
+    const [state, dispatch] = useContextPanelQRCode();
+
+    const onDataChange = (value) => {
+        dispatch({ type : "UPDATE_TEXT", text : value })
+    } 
+
     return (
-        <TextInput value={text} onChangeText={onChangeText} />
+        <TextInput value={state.text} onChangeText={onDataChange} />
     )
 }

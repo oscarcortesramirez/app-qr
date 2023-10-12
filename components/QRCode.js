@@ -1,13 +1,15 @@
 import { Text } from "react-native";
 import SvgQRCode from 'react-native-qrcode-svg';
+import { useContextPanelQRCode } from "../providers/QRCodeProvider";
 
-function QRCode ({text, size = 100, color = 'black'}) {
+export default function QRCode() {
+
+    const [state] = useContextPanelQRCode();
+
     return (
         <>  
             <Text>Escanear código QR</Text>
-            <SvgQRCode value={text} size={size} color={color} />
+            <SvgQRCode value={state.text} size={state.size} color={state.color} />
         </>
     )
 }
-
-export default QRCode;

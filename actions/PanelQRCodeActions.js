@@ -2,7 +2,7 @@ const PanelQRCodeActions = (state, action) => {
     const newState = {...state}
     switch (action.type) {
         case "UPDATE_TEXT" :
-            newState.text = action.text
+            newState.text = action.text ? action.text : "Escriba aquí"
             return newState
         
         case "UPDATE_SIZE" :

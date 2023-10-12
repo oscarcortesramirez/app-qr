@@ -1,18 +1,16 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { useContext, useState } from 'react';
 import PanelQRCode from './components/PanelQRCode';
 import QRCode from './components/QRCode';
+import { QRCodeProvider } from './providers/QRCodeProvider';
 
 export default function App() {
-
-  const theme = useContext();
-  const [ text, setText ] = useState("hola")
   
   return (
     <View style={styles.container}>
-      <Text style={styles.title} >App para generar codigo QR</Text>
-      <PanelQRCode text={text} onChangeText={setText} />
-      <QRCode text={text} />
+      <QRCodeProvider>
+        <PanelQRCode />
+        <QRCode />
+      </QRCodeProvider>
     </View>
   );
 }

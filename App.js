@@ -1,34 +1,17 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import PanelQRCode from './components/PanelQRCode';
-import QRCode from './components/QRCode';
-import { QRCodeProvider } from './providers/QRCodeProvider';
+import * as React from 'react';
+import { Routes, Route } from 'react-router-dom';
+
+import QRGenerate from './screen/QRGenerate';
+import Home from './screen/Home';
 
 export default function App() {
   
   return (
-    <View style={styles.container}>
-      <QRCodeProvider>
-        <PanelQRCode />
-        <QRCode />
-      </QRCodeProvider>
-    </View>
+    <div className='App'>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='qr-generate' element={<QRGenerate />} />
+      </Routes>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontStyle: 'bold',
-    margin: 40,
-    top: -300
-  },
-  caja: {
-    margin: 1,
-  }
-});

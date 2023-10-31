@@ -38,7 +38,7 @@ function Sincrono() {
         },
 
         desencriptar : (dataCifrado) => {
-            var bytes = CryptoJS.AES.decrypt(dataCifrado, defaultSecret).toString();
+            var bytes = CryptoJS.AES.decrypt(dataCifrado, defaultSecret)
             var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
             return decryptedData;
         }

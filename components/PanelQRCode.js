@@ -2,7 +2,7 @@ import { TextInput } from "react-native";
 import { useContextPanelQRCode } from "../providers/QRCodeProvider";
 import { View } from "react-native-web";
 import Slider from '@react-native-community/slider';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dropdown } from 'react-native-element-dropdown';
 import { Crypto, TipoAlgoritmoCripto } from "../utils/Crypto";
 // TODO
@@ -12,8 +12,9 @@ import { ColorPicker } from 'react-native-color-picker';
 export default function PanelQRCode () {
 
     const [state, dispatch] = useContextPanelQRCode();
-    const [typeCrypto,setTypeCrypto] = useState("MD5"); 
+    const [typeCrypto,setTypeCrypto] = useState(TipoAlgoritmoCripto[1]); 
     const [text, setText] = useState("MD5")
+    const [timeRefreshQRCode, setTimeRefreshQRCode] = useState(5);
     const colorPickerRef = useRef(null)
 
     const [selected, setSelected] = useState('#db643a');
@@ -32,12 +33,24 @@ export default function PanelQRCode () {
       dispatch({ type: "UPDATE_SIZE", size: size  })   
     }
 
-    const onEncryptText = async (itemTipoAlgoritmoCrypto) => {
-        setTypeCrypto(itemTipoAlgoritmoCrypto.tipo)
-        const crypto = await Crypto(itemTipoAlgoritmoCrypto.algoritmo)
-        const textoEncriptado = await crypto.encriptar(text)
-        dispatch({ type: "UPDATE_TEXT", text: textoEncriptado })
+    const onEncryptText =  (itemTipoAlgoritmoCrypto) => {
+        setTypeCrypto(itemTipoAlgoritmoCrypto)
+        updateText()
     }
+
+    const updateText = async () => {
+      const crypto = Crypto(typeCrypto.algoritmo)
+      const newText = text + new Date().getTime();
+      const textoEncriptado = await crypto.encriptar(newText).then(textoEncriptado)
+      dispatch({ type: "UPDATE_TEXT", text: textoEncriptado })
+    }
+
+    useEffect(() => {
+      if (timeRefreshQRCode == 0) return;
+
+      const mInterval = setInterval(updateText, timeRefreshQRCode * 1000);
+      return () => clearInterval(mInterval);
+    }, [timeRefreshQRCode])
 
     return (
       <View style={{width:500, height :200}}>
@@ -57,8 +70,10 @@ export default function PanelQRCode () {
           onValueChange = {onValueChange}
         />
       <TextInput 
-        value={text} 
-        onChangeText={onDataChange}  />
+        value={timeRefreshQRCode} 
+        onChangeText={setTimeRefreshQRCode}
+        type="number"
+        />
           <Dropdown
             data={TipoAlgoritmoCripto}
             labelField={"algoritmo"}

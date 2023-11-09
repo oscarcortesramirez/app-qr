@@ -1,17 +1,20 @@
-import * as React from 'react';
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { View, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 
-import App from '../App';
 
-const rootElement = document.getElementById('root')
-const root = createRoot(rootElement)
+export default function Page() {
+    return (
+        <View style={styles.container} >
+            <Link href={"/QRGenerate"} >Inicio de Sesión Profesor</Link>
+            <Link href={"/Escanear"} >Inicio de Sesión Alumno</Link>
+        </View>
+    )
+}
 
-root.render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>
-);
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+         alignItems: 'center',
+    }
+})

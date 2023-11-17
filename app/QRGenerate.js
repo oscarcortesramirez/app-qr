@@ -7,8 +7,9 @@ export default function QRGenerate() {
   
   return (
     <View style={styles.container}>
+      
       <QRCodeProvider>
-        <PanelQRCode />
+        {/* <PanelQRCode /> */}
         <QRCode />
       </QRCodeProvider>
     </View>

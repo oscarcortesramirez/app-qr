@@ -3,13 +3,20 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { app } from '../api/firebaseConfig';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import Translations from "../components/Translations";
 
 export default function Page() {
 
-    const [user, setUser] = useState('profesor@uteq.edu.mx');
-    const [password, setPassword] = useState('123456');
+    const [user, setUser] = useState('');
+    const [password, setPassword] = useState('');
+    const [language, setLanguage] = useState('es'); 
 
-    const auth = getAuth(app)
+    const auth = getAuth(app);
+
+    const toggleLanguage = () => {
+      setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'es' : 'en'));
+    };
+  
 
     const isNumeric = (value) => /^\d+$/.test(value.split('@')[0]);
 
@@ -18,9 +25,9 @@ export default function Page() {
     
         signInWithEmailAndPassword(auth, user, password)
             .then((userCredential) => {
-                alert('Bienvenido')
+                alert(Translations[language].welcome)
                 if (isNumeric(user)) {
-                    router.replace('/QRGenerate') // Profesor
+                    router.replace('/QRGenerate', { language }) // Profesor
                 } else {
                     router.replace('/Escanear'); // Alumno
                 }
@@ -32,22 +39,26 @@ export default function Page() {
 
     return (
         <View style={styles.container}>
-          <Text style={styles.title}>Iniciar Sesión</Text>
+          {/* Nuevo botón de cambio de idioma */}
+        <TouchableOpacity style={styles.languageButton} onPress={toggleLanguage} >
+          <Text style={styles.buttonText}>{language === 'en' ? 'Español' : 'English'}</Text>
+        </TouchableOpacity>
+          <Text style={styles.title}>{Translations[language].welcome}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Nombre de usuario"
+            placeholder={Translations[language].user}
             value={user}
             onChangeText={setUser}
           />
           <TextInput
             style={styles.input}
-            placeholder="Contraseña"
+            placeholder={Translations[language].password}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
           <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Ingresar</Text>
+            <Text style={styles.buttonText}>{Translations[language].login}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -87,6 +98,15 @@ export default function Page() {
         color: '#ffffff',
         fontSize: 16,
         fontWeight: 'bold',
+      },
+      languageButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#2980b9',
+        padding: 8,
+        borderRadius: 5,
+        alignItems: 'center',
       },
     });
     

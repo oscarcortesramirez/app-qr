@@ -5,13 +5,23 @@ import { useContextPanelQRCode } from "../providers/QRCodeProvider";
 import { router } from "expo-router";
 import { getAuth, signOut } from "firebase/auth";
 import app from "../api/firebaseConfig";
+import Translations from "../components/Translations";
+
 
 export default function QRCode({ usuario }) {
   const [state] = useContextPanelQRCode();
 
+  
   const [nombre, setNombre] = useState();
   const [grupo, setGrupo] = useState();
-  const [correo, setCorreo] = useState();
+  const [correo, setCorreo] = useState(); 
+  const [language, setLanguage] = useState('es'); 
+  
+
+  const toggleLanguage = () => {
+    setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'es' : 'en'));
+  };
+
 
   useEffect(() => {
     if (usuario) {
@@ -33,10 +43,14 @@ export default function QRCode({ usuario }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{`¡Bienvenido ${nombre || ''} !`}</Text>
-      <Text style={styles.title}>{`Grupo ${grupo || ''}`}</Text>
-      <Text style={styles.title}>{`Correo: ${correo || ''} `}</Text>
-      <Text style={styles.title}>Escanear Código QR</Text>
+       <TouchableOpacity style={styles.languageButton} onPress={toggleLanguage}>
+        <Text style={styles.buttonText}>{language === 'en' ? 'Español' : 'English'}</Text>
+      </TouchableOpacity>
+    <Text style={styles.title}>{`${Translations[language].welcome} ${nombre || ''}!`}</Text>
+
+      <Text style={styles.title}>{`${Translations[language].grupo}: ${grupo || ''}`}</Text>
+      <Text style={styles.title}>{`${Translations[language].email}: ${correo || ''} `}</Text>
+      <Text style={styles.title}>{Translations[language].scan}</Text>
       <View style={styles.qrCodeContainer}>
         <SvgQRCode value={nombre || 'texto'} size={state.size} color={state.color} />
       </View>
@@ -44,7 +58,7 @@ export default function QRCode({ usuario }) {
         style={styles.logoutButtonContainer}
         onPress={handleLogout}      
       >
-        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+        <Text style={styles.logoutButtonText}>{Translations[language].cerrar}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -63,6 +77,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#ffffff",
     marginBottom: 20,
+    width: 350,
+    textAlign: "center",
   },
   qrCodeContainer: {
     backgroundColor: "white",
@@ -78,5 +94,15 @@ const styles = StyleSheet.create({
   },
   logoutButtonText: {
     color: "#ffffff",
+  },
+  languageButton: {
+    position: 'absolute',
+    color: "#ffffff",
+    top: 10,
+    right: 350,
+    backgroundColor: '#fff',
+    padding: 8,
+    borderRadius: 5,
+    alignItems: 'center',
   },
 });
